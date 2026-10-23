@@ -1,7 +1,7 @@
 {
   "name": "Mailair",
   "short_name": "Mailair",
-  "description": "AI-powered email management for service businesses",
+  "description": "Email marketing and all-in-one team hub for small businesses",
   "start_url": "/dashboard",
   "scope": "/",
   "display": "standalone",

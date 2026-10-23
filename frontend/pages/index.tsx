@@ -10,9 +10,41 @@ import {
   Megaphone,
   Users,
   BarChart2,
+  LayoutGrid,
+  MessageSquare,
+  Video,
 } from 'lucide-react';
 import { useState } from 'react';
 import { useSessionContext } from '@supabase/auth-helpers-react';
+
+// ─── SEO ─────────────────────────────────────────────────────────────────────
+const SITE_URL = 'https://mailair.company';
+const SEO_TITLE = 'Mailair — Email Marketing & Team Hub for Small Businesses';
+const SEO_DESCRIPTION =
+  'Send email campaigns, share one AI-sorted inbox, and keep docs, chat, and calls in one place. Mailair is the all-in-one hub for small businesses. Start free.';
+
+// WebSite.name is what Google shows as the site name above search results.
+const STRUCTURED_DATA = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    { '@type': 'WebSite', name: 'Mailair', url: SITE_URL },
+    {
+      '@type': 'Organization',
+      name: 'Mailair',
+      url: SITE_URL,
+      logo: `${SITE_URL}/social/mailair-icon-512.png`,
+    },
+    {
+      '@type': 'SoftwareApplication',
+      name: 'Mailair',
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: 'Web, iOS, Android',
+      description: SEO_DESCRIPTION,
+      url: SITE_URL,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'INR' },
+    },
+  ],
+};
 
 // ─── Nav ─────────────────────────────────────────────────────────────────────
 function Navbar({ isLoggedIn }: { isLoggedIn: boolean }) {
@@ -26,7 +58,7 @@ function Navbar({ isLoggedIn }: { isLoggedIn: boolean }) {
           </Link>
           <div className="hidden md:flex items-center gap-9">
             <Link href="/campaigns" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Campaigns</Link>
-            <a href="#approach" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Approach</a>
+            <a href="#approach" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Features</a>
             <a href="#how-it-works" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">How it works</a>
             <a href="#pricing" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Pricing</a>
             <Link href="/shop" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Shop</Link>
@@ -49,7 +81,8 @@ function Navbar({ isLoggedIn }: { isLoggedIn: boolean }) {
       </div>
       {mobileOpen && (
         <div className="md:hidden border-t border-gray-200 bg-gray-50 px-5 py-4 space-y-3">
-          <a href="#approach" className="block text-sm text-gray-600" onClick={() => setMobileOpen(false)}>Approach</a>
+          <Link href="/campaigns" className="block text-sm text-gray-600" onClick={() => setMobileOpen(false)}>Campaigns</Link>
+          <a href="#approach" className="block text-sm text-gray-600" onClick={() => setMobileOpen(false)}>Features</a>
           <a href="#how-it-works" className="block text-sm text-gray-600" onClick={() => setMobileOpen(false)}>How it works</a>
           <a href="#pricing" className="block text-sm text-gray-600" onClick={() => setMobileOpen(false)}>Pricing</a>
           <Link href="/shop" className="block text-sm text-gray-600" onClick={() => setMobileOpen(false)}>Shop</Link>
@@ -83,25 +116,25 @@ function Hero({ isLoggedIn }: { isLoggedIn: boolean }) {
         <div>
           <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-primary-700 mb-6">
             <span className="h-1.5 w-1.5 rounded-full bg-primary-600" />
-            Built for people who run their inbox like a business
+            Email marketing + team hub for small businesses
           </p>
           <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.4rem] leading-[1.08] tracking-tight text-gray-900">
-            The email you actually
-            <span className="italic text-primary-700"> need to see</span>,
-            surfaced first.
+            Campaigns, inbox, and your whole team —
+            <span className="italic text-primary-700"> in one simple hub</span>.
           </h1>
           <p className="mt-6 text-lg text-gray-600 leading-relaxed max-w-lg">
-            Mailair sits on top of Gmail and quietly does the sorting you'd do yourself if
-            you had two more hours a day — urgent client emails up front, action items
-            pulled out, replies drafted in your voice. Then, when you're ready to reach
-            people instead of just responding to them, send them a campaign from the same place.
+            Mailair gives small businesses the connected toolkit big companies get from
+            enterprise suites, without the price tag or the setup. Send email campaigns and
+            automated follow-ups, share one inbox across Gmail and Outlook, keep docs, files,
+            chat, and calls in one workspace — and let AI flag what's urgent and draft replies
+            in your voice.
           </p>
           <div className="mt-9 flex flex-col sm:flex-row items-start sm:items-center gap-4">
             <Link
               href={isLoggedIn ? '/dashboard' : '/auth/signup'}
               className="inline-flex items-center gap-2 rounded-md bg-primary-600 hover:bg-primary-700 px-6 py-3 text-sm font-semibold text-white shadow-warm transition-colors"
             >
-              {isLoggedIn ? 'Go to dashboard' : 'Start free — 5 emails/mo'}
+              {isLoggedIn ? 'Go to dashboard' : 'Start free'}
               <ArrowRight className="h-4 w-4" />
             </Link>
             <a
@@ -112,30 +145,34 @@ function Hero({ isLoggedIn }: { isLoggedIn: boolean }) {
               <ArrowUpRight className="h-3.5 w-3.5" />
             </a>
           </div>
-          <p className="mt-6 text-sm text-gray-500">No credit card. Cancel any time. Built by one person who got tired of missing invoices in his own inbox.</p>
+          <p className="mt-6 text-sm text-gray-500">Free plan includes 1,000 campaign emails a month and a team workspace. No credit card needed.</p>
         </div>
 
-        {/* Inbox mockup — editorial paper card, not a dark browser chrome */}
+        {/* Hub mockup — one feed across campaigns, inbox, team chat, and calls */}
         <div className="relative">
           <div className="absolute -inset-3 -z-10 rounded-2xl bg-primary-100/60 rotate-1" />
           <div className="rounded-2xl border border-gray-200 bg-white shadow-warm-lg overflow-hidden">
             <div className="flex items-center gap-2 border-b border-gray-100 px-5 py-3.5">
-              <Mail className="h-4 w-4 text-primary-600" />
-              <span className="text-sm font-serif text-gray-800">Today's priority inbox</span>
-              <span className="ml-auto text-xs text-gray-400">3 need you</span>
+              <LayoutGrid className="h-4 w-4 text-primary-600" />
+              <span className="text-sm font-serif text-gray-800">Today in your hub</span>
+              <span className="ml-auto text-xs text-gray-400">4 updates</span>
             </div>
             <div className="divide-y divide-gray-100">
               {[
-                { from: 'Sarah Michaels', subject: 'Contract needs your signature today', tag: 'Urgent', tagClass: 'bg-primary-50 text-primary-700 border-primary-200' },
-                { from: 'Tech Corp Billing', subject: 'Invoice #2847 — 12 days overdue', tag: 'Needs reply', tagClass: 'bg-warning/10 text-warning border-warning/30' },
-                { from: 'Mike Reynolds', subject: "Circling back on last week's proposal", tag: 'Follow up', tagClass: 'bg-olive-50 text-olive-600 border-olive-100' },
-              ].map((email) => (
-                <div key={email.subject} className="px-5 py-4 hover:bg-gray-50/80 transition-colors">
-                  <div className="flex items-center justify-between gap-3 mb-1">
-                    <span className="text-sm font-medium text-gray-800">{email.from}</span>
-                    <span className={`text-[11px] px-2 py-0.5 rounded-full border font-medium ${email.tagClass}`}>{email.tag}</span>
+                { icon: Megaphone, title: 'Spring offer campaign', detail: 'Sent to 4,312 customers · 61% opened', tag: 'Campaign', tagClass: 'bg-success/10 text-success border-success/30' },
+                { icon: Mail, title: 'Sarah Michaels', detail: 'Contract needs your signature today', tag: 'Urgent', tagClass: 'bg-primary-50 text-primary-700 border-primary-200' },
+                { icon: MessageSquare, title: 'Team chat', detail: 'Priya: Proposal draft is up in Docs', tag: 'Team', tagClass: 'bg-olive-50 text-olive-600 border-olive-100' },
+                { icon: Video, title: 'Call with Tech Corp', detail: 'Today, 3:00 PM · video', tag: 'Call', tagClass: 'bg-warning/10 text-warning border-warning/30' },
+              ].map((item) => (
+                <div key={item.title} className="flex items-start gap-3 px-5 py-4 hover:bg-gray-50/80 transition-colors">
+                  <item.icon className="h-4 w-4 text-gray-400 mt-0.5 flex-shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between gap-3 mb-1">
+                      <span className="text-sm font-medium text-gray-800">{item.title}</span>
+                      <span className={`text-[11px] px-2 py-0.5 rounded-full border font-medium ${item.tagClass}`}>{item.tag}</span>
+                    </div>
+                    <p className="text-sm text-gray-500 truncate">{item.detail}</p>
                   </div>
-                  <p className="text-sm text-gray-500 truncate">{email.subject}</p>
                 </div>
               ))}
             </div>
@@ -143,8 +180,8 @@ function Hero({ isLoggedIn }: { isLoggedIn: boolean }) {
 
           <div className="mt-6 flex items-center gap-8 pl-1">
             {[
-              { val: '2h → 20m', label: 'avg. daily email time' },
-              { val: '99%', label: 'emails correctly sorted' },
+              { val: '1 hub', label: 'instead of five tools' },
+              { val: 'Gmail + Outlook', label: 'connected in one click' },
             ].map((stat) => (
               <div key={stat.val}>
                 <div className="font-serif text-2xl text-gray-900">{stat.val}</div>
@@ -172,15 +209,15 @@ function Campaigns() {
             Build a list. Send a campaign. Track what happens next.
           </h2>
           <p className="mt-5 text-[15px] text-gray-600 leading-relaxed max-w-lg">
-            Mailair isn't just for sorting what lands in your inbox anymore — it's where you
-            send outbound too. Paste in a list of contacts, write a campaign, and send it
-            straight from the same account, with unsubscribes and bounces handled for you
-            automatically.
+            Reach your customers from the same place you talk to them. Paste in a list of
+            contacts, write a campaign, and send it — with unsubscribes and bounces handled
+            for you automatically, and follow-up sequences that keep going after the first send.
           </p>
           <ul className="mt-8 space-y-4">
             {[
               { icon: Users, text: 'Audiences — paste contacts in, no CSV wrangling required' },
               { icon: Megaphone, text: 'A simple composer for the send itself, saved as a draft until you\'re ready' },
+              { icon: ArrowRight, text: 'Automated follow-up sequences, so no lead goes cold' },
               { icon: BarChart2, text: 'Opens, clicks, bounces, and unsubscribes tracked automatically' },
             ].map((item) => (
               <li key={item.text} className="flex items-start gap-3">
@@ -235,27 +272,27 @@ function Campaigns() {
 const approach = [
   {
     n: '01',
-    title: 'It reads before you do',
+    title: 'Reach customers',
     description:
-      "Every email that lands gets classified — urgent, needs a reply, just FYI — the moment it arrives, so your inbox is already sorted by the time you open it.",
+      'Email campaigns, audiences, and automated follow-up sequences — with opens, clicks, and unsubscribes tracked for you. No separate marketing tool required.',
   },
   {
     n: '02',
-    title: 'It pulls out the actual work',
+    title: 'One inbox, sorted by AI',
     description:
-      'Deadlines, tasks, and follow-ups get extracted into a running list. You stop re-reading threads to remember what you promised someone.',
+      "Gmail and Outlook in one place. Every email is classified — urgent, needs a reply, just FYI — deadlines and tasks are pulled out, and replies are drafted in your voice.",
   },
   {
     n: '03',
-    title: 'It drafts in your voice',
+    title: 'A workspace for the team',
     description:
-      'Replies come back written the way you actually write — not generic AI filler. Edit and send in seconds, or let routine ones go out on their own.',
+      'Shared docs, files, team chat, and built-in voice and video calls. Everything your team needs to get work done, without five different subscriptions.',
   },
   {
     n: '04',
-    title: 'It tells you the moment it matters',
+    title: 'Plugs into what you use',
     description:
-      "A Slack ping when something urgent lands. Not a notification for every email — just the ones that would've cost you a client if missed.",
+      'Syncs with HubSpot, Salesforce, Slack, and Google Calendar, with mobile apps for iOS and Android so the hub goes wherever you do.',
   },
 ];
 
@@ -264,9 +301,9 @@ function Approach() {
     <section id="approach" className="px-5 sm:px-8 py-20 sm:py-28 border-t border-gray-200">
       <div className="mx-auto max-w-6xl">
         <div className="max-w-xl mb-16">
-          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary-700 mb-3">The approach</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary-700 mb-3">One hub</p>
           <h2 className="font-serif text-3xl sm:text-4xl text-gray-900 leading-tight">
-            Not another inbox. A second pair of eyes on the one you already have.
+            One place for marketing, email, and teamwork — instead of five tabs.
           </h2>
         </div>
         <div className="grid sm:grid-cols-2 gap-x-12 gap-y-12">
@@ -290,18 +327,18 @@ function HowItWorks() {
   const steps = [
     {
       step: '1',
-      title: 'Connect Gmail',
-      description: 'One click, Google OAuth. Mailair never sees or stores your password — Google handles that part entirely.',
+      title: 'Connect your email',
+      description: 'One click to sign in with Google or Microsoft. Mailair never sees or stores your password — your provider handles that part entirely.',
     },
     {
       step: '2',
-      title: 'Let it process',
-      description: 'Hit "Process with AI" on an email, or let it run automatically. Categorized, scored, and drafted in seconds — you control how much runs on autopilot.',
+      title: 'Bring in your team and contacts',
+      description: 'Invite teammates to a shared workspace and paste in your customer list. Your inbox is sorted by AI from the first email.',
     },
     {
       step: '3',
-      title: 'Work the priority list',
-      description: 'Open a sorted inbox instead of a flat one. Check off action items, send or edit drafts, get pinged on Slack for the ones that can\'t wait.',
+      title: 'Send, reply, and follow up',
+      description: 'Launch a campaign, work a prioritized inbox, and let sequences handle the follow-ups — all from the same place.',
     },
   ];
 
@@ -336,13 +373,13 @@ const plans = [
     price: 0,
     currency: '',
     period: '',
-    description: 'To see if it actually helps before you pay for anything.',
+    description: 'Everything you need to start marketing and working as a team.',
     features: [
+      'Email campaigns — 1,000 sends / month',
+      'Team workspace: docs, files & chat',
+      'Voice & video calls',
+      '1 Gmail inbox, sorted by AI',
       '5 AI-processed emails / month',
-      '1 Gmail account',
-      'Priority inbox sorting',
-      'Action item extraction',
-      'Email marketing campaigns — up to 1,000 sends/mo',
     ],
     cta: 'Start free',
     href: '/auth/signup',
@@ -354,13 +391,13 @@ const plans = [
     price: 199,
     currency: '₹',
     period: '/mo',
-    description: 'For a busy solo inbox that can\'t afford to miss things.',
+    description: 'For a growing business that runs on email.',
     features: [
+      'Everything in Free',
       'Unlimited AI processing',
       '5 Gmail accounts',
       'Smart reply drafts, in your voice',
       'Slack alerts for urgent mail',
-      'Email marketing campaigns',
       'Priority support',
     ],
     cta: 'Start Pro',
@@ -374,7 +411,7 @@ const plans = [
     price: 1499,
     currency: '₹',
     period: '/mo',
-    description: 'When the whole team shares the same inbox pressure.',
+    description: 'For teams that share customers, inboxes, and campaigns.',
     features: [
       'Everything in Pro',
       'Unlimited Gmail accounts',
@@ -394,7 +431,7 @@ function Pricing() {
       <div className="mx-auto max-w-6xl">
         <div className="max-w-xl mb-16">
           <p className="text-xs font-semibold uppercase tracking-[0.14em] text-primary-700 mb-3">Pricing</p>
-          <h2 className="font-serif text-3xl sm:text-4xl text-gray-900 leading-tight">Simple pricing. Start free, no clock ticking.</h2>
+          <h2 className="font-serif text-3xl sm:text-4xl text-gray-900 leading-tight">Simple pricing. Start free, grow when you're ready.</h2>
         </div>
         <div className="grid md:grid-cols-3 gap-6 items-start">
           {plans.map((plan) => (
@@ -492,11 +529,11 @@ function CTABanner({ isLoggedIn }: { isLoggedIn: boolean }) {
     <section className="px-5 sm:px-8 py-20 sm:py-28 bg-primary-700 text-white">
       <div className="mx-auto max-w-3xl text-center">
         <h2 className="font-serif text-3xl sm:text-4xl leading-tight">
-          Give your inbox back its order.
+          Your campaigns, inbox, and team — finally in one place.
         </h2>
         <p className="mt-4 text-primary-100 text-lg max-w-xl mx-auto">
-          Connect Gmail, process your first emails free, and see what a sorted
-          inbox actually feels like.
+          Connect your email, send your first campaign, and see what running your
+          business from one hub feels like. Free to start.
         </p>
         <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-4">
           <Link
@@ -526,13 +563,13 @@ function Footer() {
           <div className="col-span-2">
             <Link href="/"><img src="/logo-dark.svg" alt="Mailair" className="h-8 w-auto cursor-pointer" /></Link>
             <p className="mt-4 text-sm leading-relaxed max-w-xs">
-              A sorted inbox for people running a service business on Gmail.
+              Email marketing and an all-in-one team hub for small businesses.
             </p>
           </div>
           <div>
             <h4 className="text-sm font-medium text-gray-200 mb-4">Product</h4>
             <ul className="space-y-2 text-sm">
-              <li><Link href="/#approach" className="hover:text-white transition-colors">Approach</Link></li>
+              <li><Link href="/#approach" className="hover:text-white transition-colors">Features</Link></li>
               <li><Link href="/#pricing" className="hover:text-white transition-colors">Pricing</Link></li>
               <li><Link href="/integrations" className="hover:text-white transition-colors">Integrations</Link></li>
               <li><Link href="/changelog" className="hover:text-white transition-colors">Changelog</Link></li>
@@ -558,7 +595,7 @@ function Footer() {
         </div>
         <div className="mt-12 border-t border-gray-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm">
           <p>© 2026 Mailair.</p>
-          <p>Built for service businesses who live in their inbox.</p>
+          <p>Built for small businesses that run on email.</p>
         </div>
       </div>
     </footer>
@@ -573,10 +610,25 @@ export default function LandingPage() {
   return (
     <>
       <Head>
-        <title>Mailair — a sorted inbox, not another inbox</title>
-        <meta name="description" content="Mailair triages, prioritizes, and drafts replies for your Gmail inbox — built for service businesses that can't afford to miss a client email." />
-        <meta property="og:title" content="Mailair — a sorted inbox, not another inbox" />
-        <meta property="og:description" content="Stop drowning in email. Mailair sorts, extracts, and drafts — so the important thing is never buried." />
+        <title>{SEO_TITLE}</title>
+        <meta name="description" content={SEO_DESCRIPTION} />
+        <link rel="canonical" href={SITE_URL} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={SITE_URL} />
+        <meta property="og:site_name" content="Mailair" />
+        <meta property="og:title" content={SEO_TITLE} />
+        <meta property="og:description" content={SEO_DESCRIPTION} />
+        <meta property="og:image" content={`${SITE_URL}/social/mailair-og.png`} />
+        <meta property="og:image:width" content="1200" />
+        <meta property="og:image:height" content="630" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={SEO_TITLE} />
+        <meta name="twitter:description" content={SEO_DESCRIPTION} />
+        <meta name="twitter:image" content={`${SITE_URL}/social/mailair-og.png`} />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(STRUCTURED_DATA) }}
+        />
       </Head>
       <Navbar isLoggedIn={isLoggedIn} />
       <main>

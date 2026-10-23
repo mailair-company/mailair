@@ -10,7 +10,7 @@ feed doesn't look like the same card recolored every day:
                yet — no real customer testimonials to use; ready for
                when there are)
   badge      — "shipped" pill + line (changelog)
-  mockup     — stylized priority-inbox illustration (feature carousel closer)
+  mockup     — stylized "today in your hub" illustration (feature carousel closer)
 """
 import io
 import os
@@ -221,12 +221,13 @@ def _render_badge(text: str) -> Image.Image:
 
 
 def _render_mockup() -> Image.Image:
-    """A generic, stylized priority-inbox illustration — not a live
-    screenshot (no real user data), used as the closing carousel slide."""
+    """A generic, stylized hub illustration (campaign, inbox, team chat,
+    call) — not a live screenshot (no real user data), used as the closing
+    carousel slide."""
     img = Image.new("RGBA", (W, H), CREAM)
     draw = ImageDraw.Draw(img)
 
-    card_w, card_h = 840, 620
+    card_w, card_h = 840, 720
     cx, cy = W / 2, H / 2 - 40
     left, top = cx - card_w / 2, cy - card_h / 2
 
@@ -241,11 +242,12 @@ def _render_mockup() -> Image.Image:
     draw.rounded_rectangle((left, top, left + card_w, top + card_h), radius=28, fill=(255, 255, 255, 255), outline=(231, 224, 212, 255), width=2)
 
     header_font = _font(28, "SemiBold")
-    draw.text((left + 40, top + 34), "Today's priority inbox", font=header_font, fill=INK)
+    draw.text((left + 40, top + 34), "Today in your hub", font=header_font, fill=INK)
 
-    row_labels = [("Sarah Michaels", "Contract needs your signature", "Urgent", TERRACOTTA),
-                  ("Tech Corp Billing", "Invoice #2847 — 12 days overdue", "Needs reply", (179, 129, 44, 255)),
-                  ("Mike Reynolds", "Circling back on last week's proposal", "Follow up", (117, 130, 79, 255))]
+    row_labels = [("Spring offer campaign", "Sent to 4,312 · 61% opened", "Campaign", (92, 122, 74, 255)),
+                  ("Sarah Michaels", "Contract needs your signature", "Urgent", TERRACOTTA),
+                  ("Team chat", "Priya: proposal is up in Docs", "Team", (117, 130, 79, 255)),
+                  ("Call with Tech Corp", "Today, 3:00 PM · video", "Call", (179, 129, 44, 255))]
     name_font = _font(26, "SemiBold")
     sub_font = _font(22, "Light")
     tag_font = _font(18, "SemiBold")

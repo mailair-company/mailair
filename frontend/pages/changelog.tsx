@@ -3,11 +3,33 @@ import Link from 'next/link';
 
 const releases = [
   {
-    version: 'v1.4.0',
-    date: 'March 22, 2026',
+    version: 'v2.0.0',
+    date: 'August 25, 2026',
     tag: 'Latest',
     tagColor: '#dcfce7',
     tagText: '#16a34a',
+    changes: [
+      { type: 'New', text: 'Email marketing campaigns — build an audience, send a campaign, and track opens, clicks, bounces, and unsubscribes' },
+      { type: 'New', text: 'Built-in voice and video calls, right inside Mailair' },
+      { type: 'New', text: 'Mobile app parity — campaigns, calls, and workspace on iOS and Android' },
+    ],
+  },
+  {
+    version: 'v1.5.0',
+    date: 'August 22, 2026',
+    tag: 'Team hub',
+    tagColor: '#fbe4d8',
+    tagText: '#b04723',
+    changes: [
+      { type: 'New', text: 'Small-team workspace with shared docs, files, and chat' },
+    ],
+  },
+  {
+    version: 'v1.4.0',
+    date: 'March 22, 2026',
+    tag: 'Inbox',
+    tagColor: '#e6e9d6',
+    tagText: '#5c6a3d',
     changes: [
       { type: 'New', text: 'Platform admin dashboard at /admin — view MRR, users, usage, and webhook logs' },
       { type: 'New', text: 'Manual AI processing per email — click "Process with AI" to control your usage' },

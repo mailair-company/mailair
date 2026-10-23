@@ -33,8 +33,6 @@ export default function Document() {
         <meta name="msapplication-TileColor" content="#221c16" />
         <meta name="msapplication-TileImage" content="/icon-192.png" />
 
-        <meta name="description" content="Mailair — AI-powered email management. Prioritise, summarise and reply intelligently." />
-
         <script async src="https://www.googletagmanager.com/gtag/js?id=G-KZRMDX3JN0" />
         <script dangerouslySetInnerHTML={{ __html: `
           window.dataLayer = window.dataLayer || [];

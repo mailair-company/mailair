@@ -1,4 +1,5 @@
 import type { AppProps } from 'next/app';
+import Head from 'next/head';
 import { SessionContextProvider } from '@supabase/auth-helpers-react';
 import { Toaster } from 'react-hot-toast';
 import { useEffect } from 'react';
@@ -23,6 +24,10 @@ export default function App({ Component, pageProps }: AppProps) {
         initialSession={pageProps.initialSession}
       >
         <CartProvider>
+        <Head>
+          {/* Site-wide default; next/head dedupes by name, so pages with their own description override it. */}
+          <meta name="description" content="Mailair is the email marketing and all-in-one team hub for small businesses — campaigns, an AI-sorted inbox, docs, chat, and calls in one place." />
+        </Head>
         <Component {...pageProps} />
         <Toaster
         position="top-right"

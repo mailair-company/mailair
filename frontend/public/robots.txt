@@ -1,0 +1,14 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /email
+Disallow: /actions
+Disallow: /settings
+Disallow: /admin
+Disallow: /billing
+Disallow: /analytics
+Disallow: /team
+Disallow: /workspace
+Disallow: /api/
+
+Sitemap: https://mailair.company/sitemap.xml

@@ -13,7 +13,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#221c16"
     },
-    "description": "AI-powered email management. Prioritise, summarise, reply and track revenue — all from one inbox.",
+    "description": "Email marketing and all-in-one team hub for small businesses. Campaigns, an AI-sorted inbox, and your team in one place.",
     "privacy": "public",
     "ios": {
       "bundleIdentifier": "com.mailair.app",

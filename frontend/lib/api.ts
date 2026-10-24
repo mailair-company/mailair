@@ -799,6 +799,23 @@ export const touchpointsApi = {
   },
 };
 
+// ─── Demo Requests (public) ───────────────────────────────────────────────────
+
+export interface DemoRequestPayload {
+  name: string;
+  email: string;
+  company: string;
+  team_size: string;
+  interests: string[];
+  message: string;
+}
+
+export const demoApi = {
+  request: async (payload: DemoRequestPayload): Promise<void> => {
+    await api.post('/api/public/demo-request', payload);
+  },
+};
+
 // ─── Public Benchmark Endpoints ────────────────────────────────────────────────
 
 export const benchmarksApi = {

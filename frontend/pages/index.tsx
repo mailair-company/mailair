@@ -13,8 +13,11 @@ import {
   LayoutGrid,
   MessageSquare,
   Video,
+  CalendarCheck,
+  CheckCircle2,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, type FormEvent } from 'react';
+import { demoApi } from '@/lib/api';
 import { useSessionContext } from '@supabase/auth-helpers-react';
 
 // ─── SEO ─────────────────────────────────────────────────────────────────────
@@ -62,6 +65,7 @@ function Navbar({ isLoggedIn }: { isLoggedIn: boolean }) {
             <a href="#how-it-works" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">How it works</a>
             <a href="#pricing" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Pricing</a>
             <Link href="/shop" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Shop</Link>
+            <a href="#demo" className="text-sm font-medium text-primary-700 hover:text-primary-800 transition-colors">Book a demo</a>
             {isLoggedIn ? (
               <Link href="/dashboard" className="rounded-md bg-primary-600 hover:bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors">Go to dashboard</Link>
             ) : (
@@ -86,6 +90,7 @@ function Navbar({ isLoggedIn }: { isLoggedIn: boolean }) {
           <a href="#how-it-works" className="block text-sm text-gray-600" onClick={() => setMobileOpen(false)}>How it works</a>
           <a href="#pricing" className="block text-sm text-gray-600" onClick={() => setMobileOpen(false)}>Pricing</a>
           <Link href="/shop" className="block text-sm text-gray-600" onClick={() => setMobileOpen(false)}>Shop</Link>
+          <a href="#demo" className="block text-sm font-medium text-primary-700" onClick={() => setMobileOpen(false)}>Book a demo</a>
           {isLoggedIn ? (
             <Link href="/dashboard" className="block text-center rounded-md bg-primary-600 px-4 py-2.5 text-sm font-medium text-white">Go to dashboard</Link>
           ) : (
@@ -138,11 +143,11 @@ function Hero({ isLoggedIn }: { isLoggedIn: boolean }) {
               <ArrowRight className="h-4 w-4" />
             </Link>
             <a
-              href="#how-it-works"
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-gray-700 hover:text-primary-700 transition-colors"
+              href="#demo"
+              className="inline-flex items-center gap-2 rounded-md border border-gray-300 bg-white hover:border-primary-300 hover:text-primary-700 px-6 py-3 text-sm font-semibold text-gray-800 transition-colors"
             >
-              See how it works
-              <ArrowUpRight className="h-3.5 w-3.5" />
+              <CalendarCheck className="h-4 w-4" />
+              Book a demo
             </a>
           </div>
           <p className="mt-6 text-sm text-gray-500">Free plan includes 1,000 campaign emails a month and a team workspace. No credit card needed.</p>
@@ -482,6 +487,164 @@ function Pricing() {
   );
 }
 
+// ─── Book a demo ─────────────────────────────────────────────────────────────
+const TEAM_SIZES = ['Just me', '2–10', '11–50', '50+'];
+const INTERESTS = [
+  { id: 'campaigns', label: 'Email campaigns' },
+  { id: 'inbox', label: 'AI-sorted inbox' },
+  { id: 'workspace', label: 'Team workspace & calls' },
+  { id: 'integrations', label: 'CRM & integrations' },
+];
+
+function BookDemo() {
+  const [form, setForm] = useState({ name: '', email: '', company: '', team_size: '', message: '' });
+  const [interests, setInterests] = useState<string[]>([]);
+  const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [error, setError] = useState('');
+
+  const update = (field: keyof typeof form) => (e: { target: { value: string } }) =>
+    setForm((f) => ({ ...f, [field]: e.target.value }));
+
+  const toggleInterest = (id: string) =>
+    setInterests((list) => (list.includes(id) ? list.filter((i) => i !== id) : [...list, id]));
+
+  const submit = async (e: FormEvent) => {
+    e.preventDefault();
+    setStatus('sending');
+    setError('');
+    try {
+      await demoApi.request({ ...form, interests });
+      setStatus('sent');
+    } catch (err: any) {
+      const code = err?.response?.status;
+      setError(
+        code === 429
+          ? 'Too many requests — please wait a minute and try again.'
+          : code === 422
+            ? 'Please check your name and email address.'
+            : "Something went wrong. Please try again in a moment.",
+      );
+      setStatus('error');
+    }
+  };
+
+  const inputClass =
+    'w-full rounded-md border border-gray-300 bg-white px-3.5 py-2.5 text-sm text-gray-900 placeholder:text-gray-400 focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-100';
+
+  return (
+    <section id="demo" className="px-5 sm:px-8 py-20 sm:py-28 bg-primary-50/40 border-t border-gray-200 scroll-mt-16">
+      <div className="mx-auto max-w-6xl grid lg:grid-cols-[0.9fr_1.1fr] gap-14 items-start">
+        <div>
+          <p className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.14em] text-primary-700 mb-6">
+            <CalendarCheck className="h-3.5 w-3.5" />
+            Book a demo
+          </p>
+          <h2 className="font-serif text-3xl sm:text-4xl text-gray-900 leading-tight">
+            See Mailair working for your business.
+          </h2>
+          <p className="mt-5 text-[15px] text-gray-600 leading-relaxed max-w-md">
+            A 20-minute call with the founders. We'll walk through campaigns, the shared inbox,
+            and the team workspace using your own use case — and help you set it up if it's a fit.
+          </p>
+          <ul className="mt-8 space-y-3">
+            {[
+              'A live walkthrough, not a recorded video',
+              'Help importing your contacts and connecting your inbox',
+              'Straight answers on pricing for your team size',
+            ].map((text) => (
+              <li key={text} className="flex items-start gap-3">
+                <CheckCircle2 className="h-4 w-4 text-primary-600 mt-0.5 flex-shrink-0" />
+                <span className="text-sm text-gray-700">{text}</span>
+              </li>
+            ))}
+          </ul>
+          <p className="mt-8 text-sm text-gray-500">We reply within one business day.</p>
+        </div>
+
+        <div className="rounded-2xl border border-gray-200 bg-white shadow-warm-lg p-6 sm:p-8">
+          {status === 'sent' ? (
+            <div className="py-10 text-center">
+              <CheckCircle2 className="mx-auto h-10 w-10 text-success" />
+              <h3 className="mt-4 font-serif text-2xl text-gray-900">Thanks, {form.name.split(' ')[0]}!</h3>
+              <p className="mt-2 text-sm text-gray-600 max-w-sm mx-auto">
+                Your demo request is in. We'll email <strong>{form.email}</strong> within one
+                business day to find a time.
+              </p>
+            </div>
+          ) : (
+            <form onSubmit={submit} className="space-y-5">
+              <div className="grid sm:grid-cols-2 gap-5">
+                <label className="block">
+                  <span className="block text-sm font-medium text-gray-800 mb-1.5">Your name</span>
+                  <input required maxLength={120} value={form.name} onChange={update('name')} className={inputClass} placeholder="Asha Rao" autoComplete="name" />
+                </label>
+                <label className="block">
+                  <span className="block text-sm font-medium text-gray-800 mb-1.5">Work email</span>
+                  <input required type="email" value={form.email} onChange={update('email')} className={inputClass} placeholder="asha@company.com" autoComplete="email" />
+                </label>
+              </div>
+              <div className="grid sm:grid-cols-2 gap-5">
+                <label className="block">
+                  <span className="block text-sm font-medium text-gray-800 mb-1.5">Company <span className="font-normal text-gray-400">(optional)</span></span>
+                  <input maxLength={160} value={form.company} onChange={update('company')} className={inputClass} placeholder="Rao Studio" autoComplete="organization" />
+                </label>
+                <label className="block">
+                  <span className="block text-sm font-medium text-gray-800 mb-1.5">Team size</span>
+                  <select value={form.team_size} onChange={update('team_size')} className={inputClass}>
+                    <option value="">Select…</option>
+                    {TEAM_SIZES.map((size) => (
+                      <option key={size} value={size}>{size}</option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <fieldset>
+                <legend className="block text-sm font-medium text-gray-800 mb-2">What do you want to see?</legend>
+                <div className="flex flex-wrap gap-2">
+                  {INTERESTS.map((item) => {
+                    const on = interests.includes(item.id);
+                    return (
+                      <button
+                        key={item.id}
+                        type="button"
+                        aria-pressed={on}
+                        onClick={() => toggleInterest(item.id)}
+                        className={`rounded-full border px-3.5 py-1.5 text-sm transition-colors ${
+                          on
+                            ? 'border-primary-600 bg-primary-50 text-primary-800'
+                            : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                        }`}
+                      >
+                        {item.label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </fieldset>
+              <label className="block">
+                <span className="block text-sm font-medium text-gray-800 mb-1.5">Anything we should know? <span className="font-normal text-gray-400">(optional)</span></span>
+                <textarea rows={3} maxLength={2000} value={form.message} onChange={update('message')} className={inputClass} placeholder="e.g. We send a monthly newsletter and share one Gmail inbox across 4 people." />
+              </label>
+              {status === 'error' && <p className="text-sm text-urgent" role="alert">{error}</p>}
+              <button
+                type="submit"
+                disabled={status === 'sending'}
+                className="inline-flex w-full items-center justify-center gap-2 rounded-md bg-primary-600 hover:bg-primary-700 disabled:opacity-60 px-6 py-3 text-sm font-semibold text-white transition-colors"
+              >
+                {status === 'sending' ? 'Sending…' : 'Request a demo'}
+                {status !== 'sending' && <ArrowRight className="h-4 w-4" />}
+              </button>
+              <p className="text-xs text-gray-500 text-center">
+                We'll only use your details to arrange the demo. See our <Link href="/privacy" className="underline">privacy policy</Link>.
+              </p>
+            </form>
+          )}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 // ─── Testimonials — editorial pull-quotes, not avatar-card grid ──────────────
 const testimonials = [
   {
@@ -543,11 +706,9 @@ function CTABanner({ isLoggedIn }: { isLoggedIn: boolean }) {
             {isLoggedIn ? 'Go to dashboard' : 'Start free'}
             <ArrowRight className="h-4 w-4" />
           </Link>
-          {!isLoggedIn && (
-            <Link href="/auth/signin" className="text-sm font-medium text-primary-100 hover:text-white transition-colors">
-              Already have an account? Sign in
-            </Link>
-          )}
+          <a href="#demo" className="text-sm font-medium text-primary-100 hover:text-white transition-colors">
+            Prefer a walkthrough? Book a demo
+          </a>
         </div>
       </div>
     </section>
@@ -571,6 +732,7 @@ function Footer() {
             <ul className="space-y-2 text-sm">
               <li><Link href="/#approach" className="hover:text-white transition-colors">Features</Link></li>
               <li><Link href="/#pricing" className="hover:text-white transition-colors">Pricing</Link></li>
+              <li><Link href="/#demo" className="hover:text-white transition-colors">Book a demo</Link></li>
               <li><Link href="/integrations" className="hover:text-white transition-colors">Integrations</Link></li>
               <li><Link href="/changelog" className="hover:text-white transition-colors">Changelog</Link></li>
             </ul>
@@ -637,6 +799,7 @@ export default function LandingPage() {
         <Approach />
         <HowItWorks />
         <Pricing />
+        <BookDemo />
         <Testimonials />
         <CTABanner isLoggedIn={isLoggedIn} />
       </main>

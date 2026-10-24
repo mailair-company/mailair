@@ -87,6 +87,11 @@ Small teams usually run on five disconnected tools: one for marketing, one for e
 
 ## Local development
 
+```bash
+git clone https://github.com/mailair-company/mailair.git
+cd mailair
+```
+
 ### Prerequisites
 
 - Python 3.11+ and Node.js 20+

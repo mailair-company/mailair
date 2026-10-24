@@ -183,3 +183,6 @@ Network Trash Folder
 Temporary Items
 .apdisk
 .gstack/
+# Stray local/generated artifacts
+/mobile/npx
+/generated/
